@@ -54,3 +54,6 @@
     name: fluent-bit
   become: true
   when: es_host != ""
+- name: setup ngrok tunnel 
+  include: ngrok_hh.yml
+  when: enable_ngrok == True

@@ -1,0 +1,19 @@
+---
+- name: download, extract and install ngrok zip archive
+  unarchive:
+    src: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip"
+    dest: /usr/bin
+    mode: 0755
+    remote_src: yes
+  become: true
+- name: create a systemd unit for the ngrok tunnel service
+  copy:
+    src: ngrok.service
+    dest: /etc/systemd/system/ngrok.service
+  become: true  
+- name: start the ngrok tunnel service
+  systemd:
+    name: "ngrok"
+    state: started
+    enabled: yes
+  become: true

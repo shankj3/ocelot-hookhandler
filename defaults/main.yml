@@ -38,3 +38,4 @@ extra_parsers:
 es_host: ""
 es_port: "9200"
 deployfluent: false
+enable_ngrok: true
