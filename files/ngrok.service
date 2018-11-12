@@ -2,7 +2,7 @@
 Description=ngrok tunnel for hookhandler 
 
 [Service]
-ExecStart=/usr/bin/ngrok http 8088
+ExecStart=/usr/bin/ngrok http --log-level debug --log /var/log/ngrok.log 8088
 Restart=always
 RestartSec=3
 

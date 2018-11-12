@@ -17,3 +17,9 @@
     state: started
     enabled: yes
   become: true
+- name: get address of ngrok 
+  shell: cat /var/log/ngrok.log  | egrep -oh "(http://[a-z0-9]+\.ngrok\.io) " | tail -1
+  register: ngrok_addr_grep
+- name: debug ngrok name 
+  debug:
+    msg: "{{ngrok_addr_grep.stdout}}"
