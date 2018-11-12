@@ -1,0 +1,40 @@
+---
+nsqd_ip: 172.17.0.1
+nsqd_port: 4150
+nsqlookupd_ip: 172.17.0.1
+nsqlookupd_port: 4161
+nsqlookupd_tcp_port: 4160
+consul_http_addr: "http://172.17.0.1:8500"
+consul_ip: "localhost"
+consul_port: "8500"
+version: ""
+vault_addr: ""
+# this token just needs the policy defined in ocelot repo under deploy/policies/werker_deployer.hcl
+vault_restricted_token: ""
+# auth with approle 
+vault_role_id: ""
+vault_token: ""
+vault_version: 0.10.4
+input_filter_data: |
+  [INPUT]
+      Name           systemd
+      Tag            hookhandler.*
+      Systemd_Filter _SYSTEMD_UNIT=hookhandler.service
+
+  [FILTER]
+      Name         parser
+      Match        hookhandler.*
+      Key_Name     MESSAGE
+      Reserve_Data True
+      Parser       oceloted
+extra_parsers: 
+  - name: oceloted 
+    value: |
+      [PARSER]
+          Name   oceloted
+          Format json
+          Time_Key time
+          Time_Format %Y-%m-%dT%H:%M:%SZ
+es_host: ""
+es_port: "9200"
+deployfluent: false

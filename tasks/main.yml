@@ -1,0 +1,56 @@
+---
+- name: make sure we have our required vars 
+  assert:
+    that:
+      - "vault_addr != ''"
+      - "version != ''"
+    msg: vault_addr & version are required vars
+# install wget, unzip, curl, jq
+- name: install package dependencies
+  include: package_deps.yml
+- name: generate service facts
+  service_facts:
+- name: stop hookhandler systemd if it exists
+  systemd:
+    name: "hookhandler"
+    daemon_reload: no
+    state: stopped
+    enabled: yes
+  become: true
+  when: "'hookhandler.service' in ansible_facts.services"
+- name: download, extract and install hookhandler zip archive
+  unarchive:
+    src: "https://s3-us-west-2.amazonaws.com/ocelotty/linux-hookhandler-{{version}}.zip"
+    dest: /usr/bin
+    mode: 0755
+    remote_src: yes
+  become: true
+- name: create the hookhandler directory
+  file:
+    path: /etc/hookhandler
+    state: directory
+    mode: 0755
+  become: true
+- name: create environment file for hookhandler service
+  template:
+    src: environment.j2
+    dest: /etc/hookhandler/environment
+  become: true
+- name: create a systemd unit for the hookhandler agent
+  copy:
+    src: hookhandler.service
+    dest: /etc/systemd/system/hookhandler.service
+  become: true  
+- name: reload systemd and start the hookhandler service
+  systemd:
+    name: "hookhandler"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  become: true
+- debug: 
+    msg: "{{deployfluent}} and {{es_host}}"
+- include_role: 
+    name: fluent-bit
+  become: true
+  when: es_host != ""
