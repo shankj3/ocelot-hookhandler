@@ -1,0 +1,21 @@
+# nsq-1.1.0.linux-amd64.go1.10.3.tar.gz---
+---
+- name: download, extract and install nsq zip archive
+  unarchive:
+    src: "https://s3.amazonaws.com/bitly-downloads/nsq/nsq-1.1.0.linux-amd64.go1.10.3.tar.gz"
+    dest: /usr/bin
+    mode: 0755
+    remote_src: yes
+  become: true
+- name: create nsqd service
+  template:
+    src: nsqd.service.j2
+    dest: /etc/systemd/system/nsqd.service
+  become: true
+- name: start the ngrok tunnel service
+  systemd:
+    name: "nsqd"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  become: true

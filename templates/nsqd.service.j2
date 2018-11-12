@@ -1,0 +1,10 @@
+[Unit]
+Description=nsqd
+
+[Service]
+ExecStart=nsqd -broadcast-address={{ansible_default_ipv4.address}} -lookupd-tcp-address={{nsqlookupd_ip}}:{{nsqlookupd_tcp_port}}
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

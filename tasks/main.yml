@@ -8,6 +8,8 @@
 # install wget, unzip, curl, jq
 - name: install package dependencies
   include: package_deps.yml
+- name: install nsqd
+  include: nsqd.yml
 - name: generate service facts
   service_facts:
 - name: stop hookhandler systemd if it exists
