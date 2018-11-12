@@ -2,7 +2,7 @@
 Description=nsqd
 
 [Service]
-ExecStart=nsqd -broadcast-address={{ansible_default_ipv4.address}} -lookupd-tcp-address={{nsqlookupd_ip}}:{{nsqlookupd_tcp_port}}
+ExecStart=/usr/bin/nsq-1.1.0.linux-amd64.go1.10.3/bin/nsqd -broadcast-address={{ansible_default_ipv4.address}} -lookupd-tcp-address={{nsqlookupd_ip}}:{{nsqlookupd_tcp_port}}
 Restart=always
 RestartSec=3
 
